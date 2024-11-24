@@ -191,9 +191,9 @@ class ProductController extends Controller
     private function getValidationRules(bool $required = true): string
     {
         if ($required) {
-            return 'required|string|max:255|regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/';
+            return 'required|string|max:255|regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9 _]+$/';
         }
 
-        return 'sometimes|string|max:255|regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/';
+        return 'sometimes|string|max:255|regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9 _]+$/';
     }
 }

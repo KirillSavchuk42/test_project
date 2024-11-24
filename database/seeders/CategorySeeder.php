@@ -18,6 +18,24 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory(10)->create();
+        //Category::factory(10)->create();
+        $staticCategories = [
+            'Dooley-Zieme',
+            'Yundt LLC',
+            'Fisher LLC',
+            'Abernathy, Heidenreich and Little',
+            'Herzog-Konopelski',
+            'Bayer LLC',
+            'Rohan and Sons',
+            'Anderson Ltd',
+            'Corkery Inc',
+            'Reynolds Ltd',
+        ];
+
+        foreach ($staticCategories as $category) {
+            Category::create([
+                'name' => $category,
+            ]);
+        }
     }
 }

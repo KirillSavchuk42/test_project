@@ -17,6 +17,8 @@ class Status extends Model
 {
     const string TABLE_NAME = 'statuses';
 
+    const string APPROVED_STATUS = 'approved';
+
     /**
      * @var string
      */

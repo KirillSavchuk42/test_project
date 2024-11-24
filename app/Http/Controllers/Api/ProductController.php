@@ -107,12 +107,12 @@ class ProductController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name'        => 'required|string|max:255',
+                'name'        => $this->getValidationRules(),
                 'description' => 'required|string',
-                'user'        => 'required|string|max:255',
-                'category'    => 'required|string|max:255',
-                'country'     => 'required|string|max:255',
-                'status'      => 'required|string|max:255',
+                'user'        => $this->getValidationRules(),
+                'category'    => $this->getValidationRules(),
+                'country'     => $this->getValidationRules(),
+                'status'      => $this->getValidationRules(),
             ]);
 
             $user = User::where('name', $validated['user'])->firstOrFail();
@@ -142,30 +142,37 @@ class ProductController extends Controller
     {
         try {
             $data = $request->validate([
-                'name'        => 'sometimes|string|max:255',
+                'name'        => $this->getValidationRules(false),
                 'description' => 'sometimes|string',
-                'user'        => 'sometimes|string|max:255',
-                'category'    => 'sometimes|string|max:255',
-                'country'     => 'sometimes|string|max:255',
-                'status'      => 'sometimes|string|max:255',
+                'user'        => $this->getValidationRules(false),
+                'category'    => $this->getValidationRules(false),
+                'country'     => $this->getValidationRules(false),
+                'status'      => $this->getValidationRules(false),
             ]);
 
-            $user = User::where('name', $data['user'])->firstOrFail();
-            unset($data['user']);
+            if (isset($data['user'])) {
+                $user = User::where('name', $data['user'])->firstOrFail();
+                unset($data['user']);
+                $data['user_id'] = $user->id;
+            }
 
-            $category = Category::where('name', $data['category'])->firstOrFail();
-            unset($data['category']);
+            if (isset($data['category'])) {
+                $category = Category::where('name', $data['category'])->firstOrFail();
+                unset($data['category']);
+                $data['category_id'] = $category->id;
+            }
 
-            $country = Country::where('name', $data['country'])->firstOrFail();
-            unset($data['country']);
+            if (isset($data['country'])) {
+                $country = Country::where('name', $data['country'])->firstOrFail();
+                unset($data['country']);
+                $data['country_id'] = $country->id;
+            }
 
-            $status = Status::where('name', $data['status'])->firstOrFail();
-            unset($data['status']);
-
-            $data['user_id'] = $user->id;
-            $data['category_id'] = $category->id;
-            $data['country_id'] = $country->id;
-            $data['status_id'] = $status->id;
+            if (isset($data['status'])) {
+                $status = Status::where('name', $data['status'])->firstOrFail();
+                unset($data['status']);
+                $data['status_id'] = $status->id;
+            }
 
             $product = Product::find($id);
             $product->fill($data);
@@ -175,5 +182,18 @@ class ProductController extends Controller
         }
 
         return response()->json(['id' => $product->id], 201);
+    }
+
+    /**
+     * @param bool $required
+     * @return string
+     */
+    private function getValidationRules(bool $required = true): string
+    {
+        if ($required) {
+            return 'required|string|max:255|regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/';
+        }
+
+        return 'sometimes|string|max:255|regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/';
     }
 }

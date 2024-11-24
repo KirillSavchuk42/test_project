@@ -1,0 +1,59 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:1.27.2
+    container_name: project_nginx
+    ports:
+        - "80:80"
+    volumes:
+      - ${CODE_DIR_APP}:/var/www/project.loc
+      - ./conf/project.conf:/etc/nginx/conf.d/project.conf
+    links:
+      - php8.3ubuntu
+    extra_hosts:
+      - "project.loc:172.20.2.30"
+    networks:
+      app_net:
+        ipv4_address: 172.20.2.30
+  php8.3ubuntu:
+    image: php8.3ubuntu:latest
+    container_name: project_php83ubuntu
+    build:
+      context: ./image/php8.3ubuntu
+      args:
+        XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+    volumes:
+      - ${PWD}/conf/php8.3.fpm.ubuntu.ini:/etc/php/8.3/fpm/php.ini
+      - ${PWD}/conf/php8.3.cli.ubuntu.ini:/etc/php/8.3/cli/php.ini
+      - ${CODE_DIR_APP}:/var/www/project.loc
+    links:
+      - mysqldb
+    networks:
+      app_net:
+        ipv4_address: 172.20.2.19
+    environment:
+      XDEBUG_CONFIG: remote_host=${XDEBUG_REMOTE_HOST}
+    extra_hosts:
+      - "project.loc:172.20.2.30"
+  mysqldb:
+      image: mysql:5.7
+      container_name: project_mysql
+      volumes:
+          - ${PWD}/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+          - ${PWD}/data/db/mysql5.7:/var/lib/mysql
+          - ${PWD}/init.sql:/docker-entrypoint-initdb.d/init.sql
+      ports:
+          - "13306:3306"
+      networks:
+          app_net:
+              ipv4_address: 172.20.2.20
+      environment:
+          MYSQL_ROOT_PASSWORD: mysqldb
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.2.0/24

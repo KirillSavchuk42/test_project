@@ -46,6 +46,7 @@ mkdir -p $project_root
 
 mkdir -p $project_root/storage
 chmod -R 777 $project_root/storage > /dev/null 2>/dev/null
+chmod -R 777 $project_root/storage/* > /dev/null 2>/dev/null
 
 printf "\nStarting Docker containers:\033[0m\n"
 

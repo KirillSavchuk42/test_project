@@ -19,8 +19,8 @@ Route::post('auth', [AuthenticateController::class, 'login']);
 
 Route::group(['namespace' => 'Api', 'middleware' => ['auth:sanctum']], function () {
     Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{id}', [ProductController::class, 'getById']);
     Route::get('/products/dropdown', [ProductController::class, 'getDropdownProducts']);
+    Route::get('/products/{id}', [ProductController::class, 'getById']);
 
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('products/{id}', [ProductController::class, 'update']);

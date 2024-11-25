@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Product\Traits\BaseRelationshipTrait;
+use App\Models\Product\Traits\EventTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use BaseRelationshipTrait;
+    use EventTrait;
 
     const string TABLE_NAME = 'products';
 

@@ -1,6 +1,22 @@
 Start
 
+Run from the project root:
+
+cd dev/docker/ && sh docker-install.sh
+
+docker exec -it project_php83ubuntu bash
+
+cd /var/www/project.loc/
+
+cp .env.example .env
+
+composer install
+
+chown -R www-data:www-data /var/www/project.loc/storage /var/www/project.loc/bootstrap/cache \
+&& chmod -R 775 /var/www/project.loc/storage /var/www/project.loc/bootstrap/cache
+
 php artisan migrate
+
 php artisan db:seed
 
 
@@ -9,18 +25,21 @@ Authorization request:
 http://project.loc/api/auth?email=admin@admin.com&password=password
 
 
+
 Authorization header:
 
 "Authorization": "Bearer <token>"
 
 
+
 Request examples:
 
-POST  http://project.loc/api/products?name=Test Product 1&description=Description test test&user=Admin&category=Fisher LLC&country=San Marino&status=approved
 
-POST  http://project.loc/api/products?name=Test Product 2&description=Description 2 test test&user=Admin&category=Herzog-Konopelski&country=France&status=approved
+POST  http://project.loc/api/products?name=Test Product 1&description=Description test test test&user=Admin&category=Fisher LLC&country=San Marino&status=approved
 
-POST  http://project.loc/api/products?name=Test Product 3&description=Description 2 test test&user=Admin&category=Herzog-Konopelski&country=France&status=declined
+POST  http://project.loc/api/products?name=Test Product 2&description=Description 2 test test test&user=Admin&category=Herzog-Konopelski&country=France&status=approved
+
+POST  http://project.loc/api/products?name=Test Product 3&description=Description 2 test test test&user=Admin&category=Herzog-Konopelski&country=France&status=declined
 
 
 GET  http://project.loc/api/products

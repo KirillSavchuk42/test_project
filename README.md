@@ -12,6 +12,8 @@ cp .env.example .env
 
 composer install
 
+php artisan key:generate
+
 chown -R www-data:www-data /var/www/project.loc/storage /var/www/project.loc/bootstrap/cache \
 && chmod -R 775 /var/www/project.loc/storage /var/www/project.loc/bootstrap/cache
 
@@ -22,7 +24,7 @@ php artisan db:seed
 
 Authorization request:
 
-http://project.loc/api/auth?email=admin@admin.com&password=password
+POST http://project.loc/api/auth?email=admin@admin.com&password=password
 
 
 

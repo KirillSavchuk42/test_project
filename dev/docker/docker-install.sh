@@ -5,11 +5,9 @@ envFile=.env
 echo "Check $envFile file:"
 if [ ! -f $envFile ]
 then
-    printf "\033[0;31mError: File $envFile not exists!\033[0m\n"
-    echo "Please copy .env.example to $envFile:"
-    echo "cp .env.example $envFile"
-    echo "And set up your paths to projects"
-    exit 0;
+    cp .env.example $envFile
+    CURRENT_PATH=$(pwd | sed 's/\/dev\/docker\/\?$//')
+    sed -i "s#CODE_DIR_APP=.*#CODE_DIR_APP=$CURRENT_PATH#" $envFile
 else
     echo ' - Export variables:'
     export $(cat $envFile)
